@@ -1,0 +1,159 @@
+<html>
+<head>
+<title>Kotlin quick reference card</title>
+</head>
+<body>
+<pre>val n = 10<br/>
+var accumulator: Long = 0</pre>
+<pre>fun sum(a: Int = 0, b: Int = 0): Int { return a + b }<br/>
+fun sum(a: Int, b: Int) = a + b</pre>
+
+<pre>data class Point(val x: Double, val y: Double)</pre>
+<pre>val (_, y) = pt</pre>
+
+<pre>class Person constructor(name: String) { ... }<br/>
+class Person(name: String) {
+    val first = "first"
+    init {
+        ...
+    }
+    val third = "third"
+}</pre>
+
+<pre>sealed class Expr
+data class Const(val number: Double) : Expr()
+data class Sum(val e1: Expr, val e2: Expr) : Expr()
+object NotANumber : Expr()</pre>
+
+<pre>interface Base {
+    fun print()
+}
+
+class BaseImpl(val x: Int) : Base {
+    override fun print() { print(x) }
+}
+
+class Derived(b: Base) : Base by b
+
+fun main(args: Array&lt;String&gt;) {
+    val b = BaseImpl(10)
+    Derived(b).print() // prints 10
+}</pre>
+
+<pre>class Example {
+    var p: String by Delegate()
+    var q: String by Delegate()
+}
+
+class Delegate {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
+        return "$thisRef, thank you for delegating '${property.name}' to me!"
+    }
+
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
+        println("$value has been assigned to '${property.name} in $thisRef.'")
+    }
+}</pre>
+
+<pre>import kotlin.properties.Delegates
+
+class User {
+    var name: String by Delegates.observable("no name") { prop, old, new ->
+        println("$old -> $new")
+    }
+}</pre>
+
+<p>Equality</p>
+<pre>referential === or !==</pre>
+<pre>structural == (translates to a?.equals(b) ?: b === null)<br/>
+         or !=</pre>
+<pre>0.0 == -0.0 is false</pre>
+<pre>NaN == NaN is true</pre>
+
+<p>Properties:</p><pre>
+    var name: String = ""
+        set(value) {
+            field = value
+        }
+    val hasName: Boolean
+        get() = this.name.size != 0
+    lateinit var subject: String
+    val p: String by lazy { // compute value }
+</pre>
+
+<pre>println("name: $name (${name.size} characters)")</pre>
+
+<pre>
+    Any? &lt;- SomeType? &lt;- Nothing?            Any? &lt;- Unit? &lt;- Nothing?
+     ^         ^           ^                  ^        ^         ^
+    Any  &lt;- SomeType  &lt;- Nothing             Any  &lt;- Unit  &lt;- Nothing
+</pre>
+
+<pre>Array&lt;Int&gt;? (java Integer[])</pre>
+<pre>IntArray? (java int[])</pre>
+
+<pre>typealias Predicate&lt;T&gt; = (T) -&gt; Boolean</pre>
+
+<pre>fun main(args: Array&lt;String&gt;) { ... }</pre>
+<pre>object ClassName {<br/>
+    @JvmStatic<br/>
+    fun main(args: Array&lt;String&gt;) { ... }
+}</pre>
+<p>Extension Functions</p>
+<pre>fun String.toSnakeCase() { ... }</pre>
+
+<p>Nullable</p>
+<pre>val text = label as String? ?: ""<br/>
+val text = label as? String ?: ""<br/>
+value?.let { // value is non-null }</pre>
+
+<p>Control Flow:</p>
+<pre>val mx = if (a &gt; b) a else b</pre>
+<pre>if (o is SomeType) { o.someTypeMethod() }<br/>
+if (o !is SomeType) return<br/>
+o.someTypeMethod()</pre>
+<pre>val list: List&lt;String&gt;<br/>
+if (list is ArrayList) { // here as ArrayList&lt;String&gt; }</pre>
+<pre>when (expr) {
+    0          -&gt; "zero"
+    is Int     -&gt; "non-zero integer"
+    is List&lt;*&gt; -&gt; "kind of list"
+    !is Number -&gt; "not a string"
+    else       -&gt; "something else"
+}</pre>
+<pre>
+    when {
+     boolExpr1 -&gt; "first"
+     boolExpr2 -&gt; "second"
+    }
+</pre>
+<pre>for (item in items) { item.action() }<br/>
+for (i in items.indices) { item[i].action() }</pre>
+<pre>for ((k, v) in map) { println("$k : $v") }</pre>
+
+<p>Ranges</p>
+<pre>for (i in 1..10) { ... }<br/>
+for (i in 0 until 256) { ... }
+if (x in -10..10) { ... }</pre>
+
+<p>Collections</p>
+<pre>listOf(a, b, c)     mapOf(a to 1, b to 2, c to 3)     setOf(a, b, c)</pre>
+<pre>List&lt;T&gt; <- MutableList&lt;T&gt;</pre>
+<pre>val v = map[k] ?: 0<br/>
+map[k] = v</pre>
+<p>Functions</p>
+<pre>val positives = items.filter { it &gt; 0 }</pre>
+<pre>val squares = items.map { n -&gt; n * n }</pre>
+
+<pre>with(instance) {
+    instanceMethod1()
+    instanceMethod2()
+}</pre>
+
+<p>Try-with-resources</p>
+<pre>File.open(path).use { f -> ... }</pre>
+
+<pre>generic run-time type (for inline)<br/>
+inline fun &lt;reified T: Any&gt; Gson.fromJson(json: JsonElement): T = this.fromJson(json, T::class.java)</pre>
+</body>
+</html>
